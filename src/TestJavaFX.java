@@ -1,3 +1,5 @@
+/*
+
 import javafx.application.Application;
 import javafx.event.*;
 import javafx.scene.control.Button;
@@ -44,3 +46,6 @@ public class TestJavaFX extends Application {
         this.button.setText("" + this.counter);
     }
 }
+
+
+ */

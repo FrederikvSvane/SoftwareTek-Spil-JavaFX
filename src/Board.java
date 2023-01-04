@@ -1,5 +1,4 @@
-
-import static java.lang.Math.min;
+import java.util.Scanner;
 
 public class Board {
 
@@ -70,7 +69,7 @@ public class Board {
 
 
     public boolean placePiece(int x, int y, int playerTurn) {
-
+        // Place the piece on the board
         if (playerTurn != 1 && playerTurn != 2) {
             System.out.println("Value has to be 1 or 2");
             return false;
@@ -79,41 +78,16 @@ public class Board {
             System.out.println("Not possible placement");
             return false;
         }
-
         map[x][y] = playerTurn;
 
-        //Checking which pieces to flip
+        // Check for captured pieces in each direction and allow the player to manually flip them
         for (int dx = -1; dx <= 1; dx++) {
             for (int dy = -1; dy <= 1; dy++) {
                 if (checkXDxYDy(x, y, playerTurn, dx, dy)) continue;
-                boolean flipDirection = false;
-                int l = 0;
-
-                while (true) {
-                    l++;
-                    if (!isOnBoard(x + dx * l, y + dy * l)) {
-                        break;
-                    }
-                    if (map[x + dx * l][y + dy * l] == playerTurn) {
-                        flipDirection = true;
-                        break;
-                    } else if (map[x + dx * l][y + dy * l] != 3 - playerTurn) {
-                        break;
-                    }
-                }
-                if (flipDirection) {
-                    while (l > 0) {
-                        l--;
-                        map[x + dx * l][y + dy * l] = playerTurn;
-
-                    }
-                }
-
-
+                flipCapturedPieces(x, y, dx, dy, playerTurn);
+                manualFlip(playerTurn);
             }
         }
-
-
         return true;
     }
 
@@ -191,8 +165,66 @@ public class Board {
             return 0;
         }
     }
+    public void flipCapturedPieces(int x, int y, int dx, int dy, int playerTurn) {
+        // Check if there are any captured pieces in the specified direction
+        boolean flipDirection = false;
+        int l = 0;
+        while (true) {
+            l++;
+            if (!isOnBoard(x + dx * l, y + dy * l)) {
+                break;
+            }
+            if (map[x + dx * l][y + dy * l] == playerTurn) {
+                flipDirection = true;
+                break;
+            } else if (map[x + dx * l][y + dy * l] != 3 - playerTurn) {
+                break;
+            }
+        }
+        if (flipDirection) {
+            // Flip the captured pieces
+            while (l > 1) {
+                l--;
+                map[x + dx * l][y + dy * l] = 4;
+            }
+        }
+    }
+    public void manualFlip(int playerTurn) {
+        toString();
+        // Create a scanner to read input from the command line
+        Scanner scanner = new Scanner(System.in);
+        // Continue prompting the player for coordinates until all captured pieces have been flipped
+        while (true) {
+            // Prompt the player for the coordinates of a captured piece
 
-
+            System.out.print("Player " + playerTurn + ", enter the first coordinate of a captured piece to flip it: ");
+            int x = scanner.nextInt();
+            System.out.print("Player " + playerTurn + ", enter the second coordinate of a captured piece to flip it: ");
+            int y = scanner.nextInt();
+            // Flip the piece if it is a captured piece
+            if (map[x][y] == 4) {
+                map[x][y] = playerTurn;
+            } else {
+                System.out.println("Not a captured piece. Try again.");
+            }
+            // Check if there are any more captured pieces on the board
+            boolean moreCapturedPieces = false;
+            for (int i = 0; i < x_axis; i++) {
+                for (int j = 0; j < y_axis; j++) {
+                    if (map[i][j] == 4) {
+                        moreCapturedPieces = true;
+                        break;
+                    }
+                }
+            }
+            if (!moreCapturedPieces) {
+                // If there are no more captured pieces, exit the loop
+                break;
+            }
+        }
+    }
 }
+
+
 
 
