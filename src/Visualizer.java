@@ -16,6 +16,8 @@ public class Visualizer extends Application {
     static int width = 8;
     static int height = 8;
     static int turn = 1;
+
+    static int turnCounter =1;
     String whiteImage = "Images/whitePiece.png";
     String blackImage = "Images/blackPiece.png";
     String markerImage = "Images/marker.png";
@@ -34,12 +36,13 @@ public class Visualizer extends Application {
 
  */
 
+    public static void main(String[] args){ launch(args);}
     @Override
     public void start(Stage primaryStage) {
 
         Board game = new Board(width,height);
         game.initialize();
-        game.legalSpots(1);
+
 
 
         // Create GridPane, which will function as the playing board
@@ -63,22 +66,26 @@ public class Visualizer extends Application {
                 // Tilføj en event handler for "on action"
                 cells[i][j].setOnAction(event -> {
                     if (game.placePiece(ii,jj,turn)){
+                        turnCounter++;
                         //Switches player turn
                         turn = Board.turnSwitch(turn);
 
                         //Checks for legal spots
-                        if (!game.legalSpots(turn)) {
-                            if(!game.legalSpots(Board.turnSwitch(turn))){
-                                System.out.println("No more possible moves \n    game over");
-                                //Save value for ending game
-                            } else{
-                                System.out.println("\n" + turn + " has no possible moves");
-                                turn = Board.turnSwitch(turn);
+                        if (turnCounter>4){
+                            if (!game.legalSpots(turn)) {
+                                if(!game.legalSpots(Board.turnSwitch(turn))){
+                                    System.out.println("No more possible moves \n    game over");
+                                    //Save value for ending game
+                                } else{
+                                    System.out.println("\n" + turn + " has no possible moves");
+                                    turn = Board.turnSwitch(turn);
 
-                                //no move possible for current player
+                                    //no move possible for current player
+                                }
+
                             }
-
                         }
+
                         updateGridpane(primaryStage, game, board, blackImage, whiteImage, markerImage);
 
 
@@ -147,7 +154,7 @@ public class Visualizer extends Application {
                     blackPiece.setMouseTransparent(true);
                     blackPiece.fitWidthProperty().bind(Bindings.divide(primaryStage.widthProperty(), 10));
                     blackPiece.fitHeightProperty().bind(Bindings.divide(primaryStage.widthProperty(), 10));
-                } else if (game.map[x][y] == 3) {
+                } else if (game.map[x][y] == 3 || game.map[x][y] == 4) {
                     ImageView marker = new ImageView(markingImage);
                     board.add(marker, x, y);
                     marker.setMouseTransparent(true);

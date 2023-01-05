@@ -13,7 +13,9 @@ public class BoardTestMain {
         }
     }
 
+    /*
     public static void main(String[] args) {
+
 
 
         Scanner size = new Scanner(System.in);
@@ -81,6 +83,6 @@ public class BoardTestMain {
 
 
     }
-
+*/
 
 }

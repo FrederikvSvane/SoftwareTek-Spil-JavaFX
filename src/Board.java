@@ -1,3 +1,4 @@
+import java.util.Random;
 import java.util.Scanner;
 
 public class Board {
@@ -22,10 +23,10 @@ public class Board {
     }
 
     public void initialize() {
-        map[x_axis / 2 - 1][y_axis / 2 - 1] = 1;
-        map[x_axis / 2][y_axis / 2 - 1] = 2;
-        map[x_axis / 2][y_axis / 2] = 1;
-        map[x_axis / 2 - 1][y_axis / 2] = 2;
+        map[x_axis / 2 - 1][y_axis / 2 - 1] = 4;
+        map[x_axis / 2][y_axis / 2 - 1] = 4;
+        map[x_axis / 2][y_axis / 2] = 4;
+        map[x_axis / 2 - 1][y_axis / 2] = 4;
 
     }
 
@@ -74,7 +75,7 @@ public class Board {
             System.out.println("Value has to be 1 or 2");
             return false;
         }
-        if (x < 0 || x >= x_axis || y < 0 || y >= y_axis || map[x][y] != 3) {
+        if (x < 0 || x >= x_axis || y < 0 || y >= y_axis || (map[x][y] != 3 && map[x][y] != 4)) {
             System.out.println("Not possible placement");
             return false;
         }
@@ -85,7 +86,7 @@ public class Board {
             for (int dy = -1; dy <= 1; dy++) {
                 if (checkXDxYDy(x, y, playerTurn, dx, dy)) continue;
                 flipCapturedPieces(x, y, dx, dy, playerTurn);
-                manualFlip(playerTurn);
+                //manualFlip(playerTurn);
             }
         }
         return true;
@@ -183,13 +184,27 @@ public class Board {
         }
         if (flipDirection) {
             // Flip the captured pieces
-            while (l > 1) {
+            while (l > 0) {
                 l--;
-                map[x + dx * l][y + dy * l] = 4;
+                map[x + dx * l][y + dy * l] = playerTurn;
             }
         }
     }
-    public void manualFlip(int playerTurn) {
+
+    public int startingPlayer(int gameNumber, int playerTurn){
+
+        if(gameNumber == 1){
+            Random random = new Random();
+            return random.nextInt();
+        } else if(gameNumber > 1 && playerTurn == 1){
+            return 2;
+        }else if(gameNumber > 1 && playerTurn ==2){
+            return 1;
+        } return 0;
+    }
+
+    /*
+   public void manualFlip(int playerTurn) {
         toString();
         // Create a scanner to read input from the command line
         Scanner scanner = new Scanner(System.in);
@@ -223,6 +238,9 @@ public class Board {
             }
         }
     }
+
+     */
+
 }
 
 
