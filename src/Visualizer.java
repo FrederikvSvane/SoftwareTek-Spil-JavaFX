@@ -1,7 +1,10 @@
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -9,12 +12,13 @@ import javafx.scene.layout.*;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 
 
 public class Visualizer extends Application {
 
-    static int width = 8;
-    static int height = 8;
+    static int width = 4;
+    static int height = 4;
     static int turn = 1;
 
     static int turnCounter =1;
@@ -26,34 +30,42 @@ public class Visualizer extends Application {
 
 
 
-/*
-    public void gameStart(int inwidth, int inheight){
-        width = inwidth;
-        height = inheight;
+
+    public void gameStart() throws IOException {
+
         Stage stage = new Stage();
         start(stage);
     }
 
- */
 
-    public static void main(String[] args){ launch(args);}
-    @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws IOException {
 
         Board game = new Board(width,height);
         game.initialize();
-
+        game.legalSpots(1);
 
 
         // Create GridPane, which will function as the playing board
         GridPane board = new GridPane();
+/*
+        Button restart = new Button("Restart");
+        board.add(restart, 0,0);
+        restart.setOnAction(e -> {
+            game.initialize();
+            game.legalSpots(1);
+            turn = 1;
+            turnCounter = 1;
+            updateGridpane(primaryStage, game, board, blackImage, whiteImage, markerImage);
+        });
+
+ */
+
 
         // Create 2D array of buttons, which functions as the individual cells on the playing board
         Button[][] cells = new Button[width][height];
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 cells[i][j] = new Button();
-
                 board.add(cells[i][j], i, j);
 
                 final int ii = i;
@@ -76,6 +88,15 @@ public class Visualizer extends Application {
                                 if(!game.legalSpots(Board.turnSwitch(turn))){
                                     System.out.println("No more possible moves \n    game over");
                                     //Save value for ending game
+                                    WinPage win = new WinPage();
+                                    turnCounter = 1;
+                                    //Save value for ending game
+                                    try {
+                                        primaryStage.close();
+                                        win.winStart(game);
+                                    } catch (IOException e) {
+                                        throw new RuntimeException(e);
+                                    }
                                 } else{
                                     System.out.println("\n" + turn + " has no possible moves");
                                     turn = Board.turnSwitch(turn);
@@ -164,6 +185,7 @@ public class Visualizer extends Application {
             }
         }
     }
+
 
 
 }
