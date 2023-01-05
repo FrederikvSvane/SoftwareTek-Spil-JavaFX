@@ -9,6 +9,7 @@ import javafx.scene.layout.*;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 
 
 public class Visualizer extends Application {
@@ -30,17 +31,13 @@ public class Visualizer extends Application {
 
 
 
-/*
-    public void gameStart(int inwidth, int inheight){
-        width = inwidth;
-        height = inheight;
+    public void gameStart(){
         Stage stage = new Stage();
         start(stage);
     }
 
- */
 
-    public static void main(String[] args){ launch(args);}
+
     @Override
     public void start(Stage primaryStage) {
 
@@ -87,6 +84,15 @@ public class Visualizer extends Application {
                                 if(!game.legalSpots(Board.turnSwitch(turn))){
                                     System.out.println("No more possible moves \n    game over");
                                     //Save value for ending game
+                                    WinPage win = new WinPage();
+                                    turnCounter = 1;
+                                    try{
+                                        primaryStage.close();
+                                        win.winStart(game);
+                                    } catch (IOException e) {
+                                        throw new RuntimeException(e);
+                                    }
+
                                 } else{
                                     System.out.println("\n" + turn + " has no possible moves");
                                     turn = Board.turnSwitch(turn);
