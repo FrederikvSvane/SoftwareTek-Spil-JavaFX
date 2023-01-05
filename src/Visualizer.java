@@ -15,7 +15,11 @@ public class Visualizer extends Application {
 
     static int width = 8;
     static int height = 8;
-    static int turn = 1;
+    static int turn = (int)(Math.random()*2)+1;
+
+    static int firstStartingPlayer = (int)(Math.random()*2)+1;
+
+    static int gameNumber = 1;
 
     static int turnCounter =1;
     String whiteImage = "Images/whitePiece.png";
@@ -42,11 +46,16 @@ public class Visualizer extends Application {
 
         Board game = new Board(width,height);
         game.initialize();
+        turn = game.startingPlayer(gameNumber,firstStartingPlayer);
 
 
 
-        // Create GridPane, which will function as the playing board
+        // Create two GridPanes, which will function as the playing board and as the overall current
+        // status of the game (score, time, player turn, announcements...)
+        // and adds them to a VBox
+
         GridPane board = new GridPane();
+
 
         // Create 2D array of buttons, which functions as the individual cells on the playing board
         Button[][] cells = new Button[width][height];
@@ -63,15 +72,17 @@ public class Visualizer extends Application {
 
 
 
-                // Tilføj en event handler for "on action"
+                // Create an event handler for "on action"
                 cells[i][j].setOnAction(event -> {
                     if (game.placePiece(ii,jj,turn)){
                         turnCounter++;
                         //Switches player turn
-                        turn = Board.turnSwitch(turn);
-
+                        if(turnCounter==3){
+                            turn = Board.turnSwitch(turn);
+                        }
                         //Checks for legal spots
                         if (turnCounter>4){
+                            turn = Board.turnSwitch(turn);
                             if (!game.legalSpots(turn)) {
                                 if(!game.legalSpots(Board.turnSwitch(turn))){
                                     System.out.println("No more possible moves \n    game over");
@@ -103,12 +114,16 @@ public class Visualizer extends Application {
         }
 
 
+
+
         Scene scene = new Scene(board, 600, 600);
         board.setPadding(new Insets(10,10,10,10));
         primaryStage.setMinWidth(250);
         primaryStage.setScene(scene);
         //primaryStage.setResizable(false);
         primaryStage.show();
+
+
 
 
     }
@@ -164,6 +179,5 @@ public class Visualizer extends Application {
             }
         }
     }
-
 
 }

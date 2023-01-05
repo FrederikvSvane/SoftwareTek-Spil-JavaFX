@@ -191,15 +191,16 @@ public class Board {
         }
     }
 
-    public int startingPlayer(int gameNumber, int playerTurn){
+    public int startingPlayer(int gameNumber,int firstStartingPlayer){
 
         if(gameNumber == 1){
-            Random random = new Random();
-            return random.nextInt();
-        } else if(gameNumber > 1 && playerTurn == 1){
-            return 2;
-        }else if(gameNumber > 1 && playerTurn ==2){
-            return 1;
+            return (int)(Math.random() * 2) + 1;
+        } else if(gameNumber > 1){
+            if(gameNumber % 2 == 0){
+                return turnSwitch(firstStartingPlayer);
+            }else if(gameNumber % 2 == 1){
+                return firstStartingPlayer;
+            }
         } return 0;
     }
 
