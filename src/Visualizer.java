@@ -2,20 +2,23 @@ import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.Scene;
+import javafx.scene.text.Font;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 
 
 public class Visualizer extends Application {
 
-    static int width = 8;
-    static int height = 8;
+    static int width = 4;
+    static int height = 4;
     static int turn = (int)(Math.random()*2)+1;
 
     static int firstStartingPlayer = (int)(Math.random()*2)+1;
@@ -28,6 +31,9 @@ public class Visualizer extends Application {
     String markerImage = "Images/marker.png";
     String backImage1 = "Images/backgroundSkins/chess1.png";
     String backImage2 = "Images/backgroundSkins/chess2.png";
+
+    String appIcon = "Images/reversiIcon.png";
+    Label showTurn = new Label(turnColor(turn)+"'s turn");
 
 
 
@@ -44,6 +50,7 @@ public class Visualizer extends Application {
         Board game = new Board(width,height);
         game.initialize();
         turn = game.startingPlayer(gameNumber,firstStartingPlayer);
+        showTurn.setText(turnColor(turn%2+1)+"'s turn");
 
 
 
@@ -59,7 +66,7 @@ public class Visualizer extends Application {
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 cells[i][j] = new Button();
-
+                cells[i][j].getStylesheets().add(getClass().getResource("boardButtons.css").toExternalForm());
                 board.add(cells[i][j], i, j);
 
                 final int ii = i;
@@ -75,17 +82,22 @@ public class Visualizer extends Application {
                         turnCounter++;
                         //Switches player turn
                         if(turnCounter==3){
+                            showTurn.setText(turnColor(turn)+"'s turn");
                             turn = Board.turnSwitch(turn);
                         }
-                        //Checks for legal spots
+
                         if (turnCounter>4){
+                            showTurn.setText(turnColor(turn)+"'s turn");
                             turn = Board.turnSwitch(turn);
+
+                            //Checks for legal spots
                             if (!game.legalSpots(turn)) {
                                 if(!game.legalSpots(Board.turnSwitch(turn))){
                                     System.out.println("No more possible moves \n    game over");
                                     //Save value for ending game
                                     WinPage win = new WinPage();
                                     turnCounter = 1;
+                                    gameNumber++;
                                     try{
                                         primaryStage.close();
                                         win.winStart(game);
@@ -94,6 +106,7 @@ public class Visualizer extends Application {
                                     }
 
                                 } else{
+                                    showTurn.setText(turnColor(turn)+"'s turn");
                                     System.out.println("\n" + turn + " has no possible moves");
                                     turn = Board.turnSwitch(turn);
 
@@ -119,14 +132,19 @@ public class Visualizer extends Application {
             board.setAlignment(Pos.CENTER);
         }
 
-
-
-
-        Scene scene = new Scene(board, 600, 600);
+        Image icon = new Image(appIcon);
+        showTurn.setFont(Font.font("Comic Sans", 24));
+        VBox vbox = new VBox();
+        primaryStage.setTitle("Reversi");
+        vbox.getChildren().addAll(board,showTurn);
+        vbox.setAlignment(Pos.CENTER);
+        Rectangle2D screenBounds = Screen.getPrimary().getBounds();
+        Scene scene = new Scene(vbox, screenBounds.getHeight()/2, screenBounds.getHeight()/2);
         board.setPadding(new Insets(10,10,10,10));
         primaryStage.setMinWidth(250);
         primaryStage.setScene(scene);
-        //primaryStage.setResizable(false);
+        primaryStage.getIcons().add(icon);
+        primaryStage.setResizable(false);
         primaryStage.show();
 
 
@@ -184,6 +202,14 @@ public class Visualizer extends Application {
                 }
             }
         }
+    }
+
+    public String turnColor(int turn){
+        if(turn==1){
+            return "White";
+        } else if(turn==2){
+            return "Black";
+        }else return null;
     }
 
 }
