@@ -17,8 +17,8 @@ import java.io.IOException;
 
 public class Visualizer extends Application {
 
-    static int width = 4;
-    static int height = 4;
+    static int width = 8;
+    static int height = 8;
     static int turn = (int)(Math.random()*2)+1;
 
     static int firstStartingPlayer = (int)(Math.random()*2)+1;
