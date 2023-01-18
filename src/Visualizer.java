@@ -17,8 +17,8 @@ import java.io.IOException;
 
 public class Visualizer extends Application {
 
-    static int width = 4;
-    static int height = 4;
+    static int width = 8;
+    static int height = 8;
     static int turn = (int)(Math.random()*2)+1;
 
     static int firstStartingPlayer = (int)(Math.random()*2)+1;
@@ -50,7 +50,7 @@ public class Visualizer extends Application {
         Board game = new Board(width,height);
         game.initialize();
         turn = game.startingPlayer(gameNumber,firstStartingPlayer);
-        showTurn.setText(turnColor(turn%2+1)+"'s turn");
+        showTurn.setText(turnColor(turn)+"'s turn");
 
 
 
@@ -72,7 +72,7 @@ public class Visualizer extends Application {
                 final int ii = i;
                 final int jj = j;
 
-                updateGridpane(primaryStage, game, board, blackImage, whiteImage, markerImage);
+                updateGridpane(primaryStage, game, board, whiteImage, blackImage, markerImage);
 
 
 
@@ -82,19 +82,19 @@ public class Visualizer extends Application {
                         turnCounter++;
                         //Switches player turn
                         if(turnCounter==3){
-                            showTurn.setText(turnColor(turn)+"'s turn");
+
                             turn = Board.turnSwitch(turn);
+                            showTurn.setText(turnColor(turn)+"'s turn");
                         }
 
                         if (turnCounter>4){
-                            showTurn.setText(turnColor(turn)+"'s turn");
-                            turn = Board.turnSwitch(turn);
 
+                            turn = Board.turnSwitch(turn);
+                            showTurn.setText(turnColor(turn)+"'s turn");
                             //Checks for legal spots
                             if (!game.legalSpots(turn)) {
                                 if(!game.legalSpots(Board.turnSwitch(turn))){
                                     System.out.println("No more possible moves \n    game over");
-                                    //Save value for ending game
                                     WinPage win = new WinPage();
                                     turnCounter = 1;
                                     gameNumber++;
@@ -106,17 +106,16 @@ public class Visualizer extends Application {
                                     }
 
                                 } else{
-                                    showTurn.setText(turnColor(turn)+"'s turn");
+
                                     System.out.println("\n" + turn + " has no possible moves");
                                     turn = Board.turnSwitch(turn);
-
-                                    //no move possible for current player
+                                    showTurn.setText(turnColor(turn)+"'s turn");
                                 }
 
                             }
                         }
 
-                        updateGridpane(primaryStage, game, board, blackImage, whiteImage, markerImage);
+                        updateGridpane(primaryStage, game, board, whiteImage, blackImage, markerImage);
 
 
 
