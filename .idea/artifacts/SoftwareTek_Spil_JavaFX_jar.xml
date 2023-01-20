@@ -2,8 +2,8 @@
   <artifact type="jar" name="SoftwareTek-Spil-JavaFX:jar">
     <output-path>$PROJECT_DIR$/out/artifacts/SoftwareTek_Spil_JavaFX_jar</output-path>
     <root id="archive" name="SoftwareTek-Spil-JavaFX.jar">
-      <element id="module-output" name="BasicReversi" />
-      <element id="module-source" name="BasicReversi" />
+      <element id="module-output" name="SoftwareTek-Spil-JavaFX" />
+      <element id="module-source" name="SoftwareTek-Spil-JavaFX" />
     </root>
   </artifact>
 </component>
